@@ -1,62 +1,52 @@
-[README.md](https://github.com/user-attachments/files/29447165/README.md)
-# Luneth & Lord Carsus
-### *Bir Karanlık Roman*
+[README.md](https://github.com/user-attachments/files/29551774/README.md)
+# Luneth & Lord Carsus — Karanlıktan Doğan Işık
 
-> "Sevmek, yanmayı göze almaktır.  
-> Ve en asil alevler, en derin külleri bırakır."
+Otofiksiyon türünde, baskı-hazır (print-ready) tek dosyalık bir HTML kitap projesi. Kapak, iç kapak, içindekiler, ithaf sayfaları, bölümler ve arka kapak dahil olmak üzere tam bir kitap düzeni tek bir `book.html` dosyasında tanımlıdır.
 
----
+## İçerik
 
-## Hakkında
+- **Kapak & arka kapak** — gece mavisi/lacivert zemin üzerine gümüş tonlarında tipografi, dekoratif çerçeve ve sahte barkod
+- **İç kapak & içindekiler**
+- **İthaf sayfaları**
+- **5 bölüm** + *Ophelia'nın Son Mektubu* + *Epilog*
+- Her bölümün sonunda **"Psikolojik Not"** ve **"Ey Okuyucu!"** kutuları
+- 6in × 9in sayfa boyutunda, baskıya hazır `@page` ayarları
 
-**Luneth & Lord Carsus**, gerçek anlardan ilham alınarak yazılmış kurgusal bir karanlık romandır. Karakterlerin isimleri değiştirilmiş, ama hislerin özü korunmuştur. Bir kadının kendi sesini bulma hikâyesi; gölgede başlayan, ışıkta sona eren bir yolculuk.
+## Tema
 
----
+Zemin: koyu lacivert / gece mavisi (`#0a1024`)
+Metin & vurgular: gümüş tonları (`#c3cadf`, `#a9b8e0`, `#8b98c2`)
+Font: Georgia / Palatino Linotype / Liberation Serif (serif)
 
-## İçindekiler
+## Kullanım
 
-| | Bölüm |
-|---|---|
-| ✦ | Prolog — Enkaz Üzerinde Doğan Yıldız |
-| I | Karanlığın Kıyısındaki Kale |
-| II | İlk Zincir |
-| III | Ateş ve Buz |
-| IV | Gölge Oyunu |
-| V | Kırılan Antlaşma |
-| VI | Küllerin Dilinden Yükselen Dua |
-| VII | Sessizliğin Anatomisi |
-| VIII | Beyaz Kale Hayali |
-| IX | Mahkemenin Işığı |
-| ✦ | Epilog — Külden Doğan Kraliçe |
-| ✉ | Mektup — Karanlığa Yazılan Mektup |
+Dosyayı bir tarayıcıda açıp **Yazdır → PDF olarak kaydet** ile PDF çıktısı alabilirsiniz:
 
----
+```bash
+# Yerelde önizleme
+open book.html        # macOS
+xdg-open book.html    # Linux
+start book.html       # Windows
+```
 
-## Okumak İçin
+Tarayıcı yazdırma ayarlarında:
+- Kağıt boyutu: **6in × 9in** (özel boyut)
+- Kenar boşukları: **Yok** (dosya içinde zaten tanımlı)
+- Arka plan grafikleri: **Açık** (tema renklerinin ve dokunun görünmesi için gerekli)
 
-**GitHub Pages üzerinden canlı oku:**  
-🔗 `https://kullaniciadın.github.io/luneth-lord-carsus`
+## Dosya Yapısı
 
-Ya da `index.html` dosyasını indirip herhangi bir tarayıcıda aç.
+```
+.
+├── book.html    # Tüm kitap: stil + içerik tek dosyada
+└── README.md
+```
 
----
+## Notlar
 
-## Özellikler
+- Emoji kullanımı yerine, PDF dönüştürücüler arasında tutarlı görünmesi için bazı ifadeler inline SVG ikon olarak gömülmüştür.
+- Bu kitap bir otofiksiyon eseridir.
 
-- Sayfa sayfa okuma deneyimi — sekme yok
-- Klavye desteği: `←` `→` ok tuşlarıyla bölüm geçişi
-- Mobilde kaydırarak geçiş (swipe)
-- İçindekiler paneli
-- İlerleme çubuğu
-- Tamamen bağımsız tek dosya, internet bağlantısı gerektirmez *(fontlar hariç)*
+## Lisans
 
----
-
-## Teknik
-
-Tek bir `.html` dosyasından oluşur. Harici bağımlılık yoktur.  
-Fontlar Google Fonts üzerinden yüklenir: **Cormorant Garamond** & **EB Garamond**.
-
----
-
-*Bu kitap, anlayan bir yüreğe adanmıştır — en derin karanlıkta bile ışık üreten o yüreğe.*
+Bu depodaki metin ve tasarım telif hakkı yazarına aittir. Kullanım koşulları için yazarla iletişime geçin.
