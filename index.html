@@ -2,791 +2,446 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luneth & Lord Carsus — Bir Karanlık Roman</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<title>Luneth &amp; Lord Carsus</title>
 <style>
-  :root {
-    --bg:          #0b0f1c;
-    --bg-alt:      #0e1220;
-    --bg-dark:     #08090f;
-    --navy:        #1c2444;
-    --navy-light:  #232d56;
-    --silver:      #9aa3b8;
-    --silver-light:#c2c9d8;
-    --silver-pale: #e0e4ef;
-    --gray-dark:   #3a3f50;
-    --gray-mid:    #2a2f3e;
-    --gold:        #b8962e;
-    --text-main:   #dde1ec;
-    --text-dim:    #8892a8;
-    --text-dimmer: #4e5468;
-    --page-w:      680px;
-    --transition:  0.45s cubic-bezier(0.4,0,0.2,1);
-  }
+  @page { size: 6in 9in; margin: 0; }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; }
 
   html, body {
-    height: 100%;
-    background: var(--bg);
-    color: var(--text-main);
-    font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
-    overflow: hidden;
+    margin: 0; padding: 0;
+    font-family: Georgia, 'Palatino Linotype', 'Liberation Serif', serif;
+    color: #c3cadf;
+    background-color: #0a1024;
   }
 
-  /* ── READER SHELL ── */
-  #reader {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+  /* ---------- Continuous aged-parchment texture, tiles across every printed page ---------- */
+  body {
+    background-color: #0a1024;
+    background-image:
+      radial-gradient(ellipse at 10% 8%, rgba(120,140,195,0.10), transparent 40%),
+      radial-gradient(ellipse at 90% 15%, rgba(120,140,195,0.09), transparent 38%),
+      radial-gradient(ellipse at 25% 85%, rgba(115,135,190,0.11), transparent 42%),
+      radial-gradient(ellipse at 80% 92%, rgba(115,135,190,0.09), transparent 40%),
+      radial-gradient(ellipse at 55% 45%, rgba(140,160,210,0.05), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(150,165,205,0.025) 0px, rgba(150,165,205,0.025) 1px, transparent 1px, transparent 3px),
+      repeating-linear-gradient(90deg, rgba(150,165,205,0.018) 0px, rgba(150,165,205,0.018) 1px, transparent 1px, transparent 4px);
+    background-repeat: repeat;
+    background-size: 9in 9in, 9in 9in, 9in 9in, 9in 9in, 9in 9in, 6px 6px, 6px 6px;
+  }
+
+  .content-wrap { width: 6in; margin: 0 auto; }
+
+  /* ============ STANDALONE FULL PAGES ============ */
+  .full-page {
+    width: 6in; height: 9in;
     position: relative;
-  }
-
-  /* ── HEADER BAR ── */
-  #topbar {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 28px;
-    background: var(--bg-dark);
-    border-bottom: 1px solid var(--gray-mid);
-    z-index: 100;
-    gap: 16px;
-  }
-  #topbar-title {
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--text-dimmer);
-    white-space: nowrap;
+    page-break-after: always;
+    page-break-inside: avoid;
     overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
-    text-align: center;
   }
-  .tb-btn {
-    background: none;
-    border: 1px solid var(--gray-dark);
-    color: var(--silver);
-    font-family: inherit;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .tb-btn:hover { border-color: var(--silver); color: var(--silver-light); }
-  .tb-btn:disabled { opacity: 0.25; cursor: default; }
-  .tb-btn:disabled:hover { border-color: var(--gray-dark); color: var(--silver); }
+  .full-page:last-child { page-break-after: auto; }
 
-  /* ── PROGRESS BAR ── */
-  #progress-bar {
-    flex-shrink: 0;
-    height: 2px;
-    background: var(--gray-mid);
-    position: relative;
-  }
-  #progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--navy-light), var(--silver));
-    transition: width 0.4s ease;
-  }
-
-  /* ── SCROLL AREA ── */
-  #scroll-area {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-  }
-  #scroll-area::-webkit-scrollbar { width: 4px; }
-  #scroll-area::-webkit-scrollbar-track { background: transparent; }
-  #scroll-area::-webkit-scrollbar-thumb { background: var(--gray-dark); border-radius: 2px; }
-
-  /* ── PAGES ── */
-  .page {
-    display: none;
-    opacity: 0;
-    animation: fadeIn var(--transition) forwards;
-    max-width: var(--page-w);
-    margin: 0 auto;
-    padding: 0 0 80px;
-    min-height: 100%;
-  }
-  .page.active { display: block; }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── COVER ── */
+  /* ---------- COVER ---------- */
   .cover {
-    background: linear-gradient(170deg, #080c18 0%, #10162c 40%, #1a2040 70%, #0b0f1c 100%);
-    padding: 80px 56px 70px;
+    background:
+      radial-gradient(ellipse at 50% 38%, #182849 0%, #0e1730 45%, #050810 100%);
+    color: #e4e8f4;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center;
-    position: relative;
-    border-bottom: 1px solid var(--gray-dark);
-    min-height: 65vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
+    padding: 0.55in;
   }
-  .orn-row {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 14px;
-    margin: 18px 0;
+  .cover::before {
+    content: "";
+    position: absolute; inset: 0.28in;
+    border: 2px solid #8b98c2;
+    box-shadow: inset 0 0 0 1px rgba(139,152,194,0.35), inset 0 0 40px rgba(0,0,0,0.55);
   }
-  .orn-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--silver), transparent); }
-  .orn-sym { color: var(--silver-light); font-size: 14px; letter-spacing: 10px; flex-shrink: 0; }
-  .cover-label {
-    font-size: 11px; letter-spacing: 6px; text-transform: uppercase;
-    color: var(--silver); font-weight: 400; margin-bottom: 20px;
+  .cover::after {
+    content: "";
+    position: absolute; inset: 0.40in;
+    border: 1px solid rgba(139,152,194,0.55);
+  }
+  .cover-glow {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 50% 40%, rgba(150,170,225,0.20), transparent 55%);
+  }
+  .cover-inner { position: relative; z-index: 2; }
+  .cover-orn { font-size: 22px; letter-spacing: 10px; color: #9aa8d1; margin-bottom: 0.30in; }
+  .cover-kicker {
+    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    color: #9aa8d1; margin-bottom: 0.35in;
   }
   .cover-title {
-    font-size: 58px; font-weight: 300; letter-spacing: 4px;
-    line-height: 1.05; color: #fff;
-    text-shadow: 0 0 80px rgba(154,163,184,0.12);
+    font-size: 40px; font-weight: bold; letter-spacing: 2px;
+    line-height: 1.15; margin: 0 0 0.18in 0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
   }
-  .cover-title span { color: var(--silver-light); }
-  .cover-amp {
-    font-size: 28px; color: var(--silver); letter-spacing: 10px;
-    display: block; margin: 6px 0; font-style: italic; font-weight: 300;
+  .cover-amp { display:block; font-size: 22px; color:#9aa8d1; margin: 0.05in 0; letter-spacing: 6px;}
+  .cover-rule { width: 1.6in; height: 1px; background: linear-gradient(90deg, transparent, #9aa8d1, transparent); margin: 0.30in auto; }
+  .cover-subtitle {
+    font-size: 17px; font-style: italic; letter-spacing: 1px; color: #c7cee6;
+    margin-bottom: 0.5in;
   }
-  .cover-tag {
-    display: inline-block; border: 1px solid var(--gray-dark);
-    padding: 6px 22px; font-size: 10px; letter-spacing: 5px;
-    text-transform: uppercase; color: var(--silver); margin-top: 28px;
-  }
-
-  /* ── EPIGRAPH ── */
-  .epigraph {
-    padding: 60px 64px;
-    text-align: center;
-    background: #0c1020;
-    border-bottom: 1px solid var(--gray-mid);
-  }
-  .epigraph-text {
-    font-size: 15.5px; font-style: italic; line-height: 1.9;
-    color: var(--text-dim); margin-bottom: 10px;
-  }
-  .epigraph-attr {
-    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
-    color: var(--text-dimmer);
-  }
-  .ep-div { display: flex; align-items: center; gap: 14px; justify-content: center; margin: 32px 0; }
-  .ep-line { width: 56px; height: 1px; background: var(--gray-dark); }
-  .ep-star { color: var(--silver); font-size: 13px; }
-
-  /* ── TOC ── */
-  .toc-wrap { padding: 60px 48px; }
-  .section-label {
-    font-size: 10px; letter-spacing: 6px; text-transform: uppercase;
-    color: var(--silver); text-align: center; margin-bottom: 36px;
-  }
-  .toc-box { border: 1px solid var(--gray-dark); position: relative; }
-  .toc-box::before, .toc-box::after {
-    content: '✦'; position: absolute; color: var(--silver);
-    font-size: 11px; top: -7px; background: var(--bg-alt); padding: 0 8px;
-  }
-  .toc-box::before { left: 24px; }
-  .toc-box::after  { right: 24px; }
-  .toc-inner { padding: 28px 36px; }
-  .toc-row {
-    display: flex; align-items: baseline; gap: 12px;
-    padding: 9px 0; border-bottom: 1px solid var(--gray-mid);
-    cursor: pointer; transition: all 0.2s;
-  }
-  .toc-row:last-child { border-bottom: none; }
-  .toc-row:hover .toc-title { color: var(--silver-light); }
-  .toc-row:hover { padding-left: 4px; }
-  .toc-n { font-size: 10px; color: var(--text-dimmer); letter-spacing: 2px; min-width: 32px; }
-  .toc-title { font-size: 14px; color: var(--text-dim); font-style: italic; flex: 1; }
-  .toc-arrow { font-size: 10px; color: var(--text-dimmer); }
-
-  /* ── CHAPTER HEADER ── */
-  .chapter-header { padding: 52px 48px 0; text-align: center; }
-  .ch-orn {
-    display: flex; align-items: center; gap: 18px; margin-bottom: 22px;
-  }
-  .ch-orn-line {
-    flex: 1; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--navy-light), var(--silver), var(--navy-light), transparent);
-  }
-  .ch-orn-sym { color: var(--silver-light); font-size: 13px; letter-spacing: 8px; }
-  .ch-label { font-size: 10px; letter-spacing: 5px; text-transform: uppercase; color: var(--text-dimmer); display: block; margin-bottom: 10px; }
-  .ch-num   { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--silver); display: block; margin-bottom: 10px; }
-  .ch-title { font-size: 27px; font-weight: 400; color: #fff; letter-spacing: 1px; line-height: 1.3; }
-  .ch-orn-b {
-    display: flex; align-items: center; gap: 18px; margin-top: 22px;
-  }
-  .ch-orn-b-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gray-dark), transparent); }
-  .ch-orn-b-sym { color: var(--silver); font-size: 10px; opacity: 0.5; }
-
-  /* ── BODY ── */
-  .chapter-body { padding: 34px 48px 48px; }
-  .chapter-body p {
-    font-size: 16.5px; line-height: 1.92; color: var(--text-main);
-    margin-bottom: 22px; text-align: justify; hyphens: auto;
-  }
-  .chapter-body p:last-child { margin-bottom: 0; }
-
-  .drop-cap::first-letter {
-    float: left; font-size: 76px; line-height: 0.72; font-weight: 700;
-    margin: 8px 10px -2px 0;
-    background: linear-gradient(135deg, var(--navy-light) 0%, var(--silver-light) 50%, var(--silver) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-family: 'Cormorant Garamond', serif; font-style: normal;
+  .cover-bottom {
+    position: absolute; bottom: 0.55in; left: 0; right: 0;
+    text-align: center; font-size: 10px; letter-spacing: 3px; color: #6b76a0;
+    text-transform: uppercase; z-index: 2;
   }
 
-  .inner-break {
-    display: flex; align-items: center; gap: 18px; margin: 36px 0;
+  /* ---------- TITLE PAGE ---------- */
+  .titlepage {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 1in;
   }
-  .ib-line { flex: 1; height: 1px; background: var(--gray-mid); }
-  .ib-sym  { color: var(--silver); font-size: 12px; letter-spacing: 8px; opacity: 0.6; }
+  .titlepage .cover-orn { color: #7c8ab3; }
+  .titlepage h1 {
+    font-size: 30px; letter-spacing: 1.5px; margin: 0.15in 0; color: #eef1fa;
+  }
+  .titlepage .subtitle { font-style: italic; font-size: 15px; color: #b0b8d6; margin-bottom: 0.4in; }
+  .titlepage .meta { font-size: 11px; letter-spacing: 2px; color: #7c8ab3; text-transform: uppercase; margin-top: 0.6in; }
+  .titlepage .isbn { font-size: 10px; color: #7c88ad; margin-top: 0.08in; letter-spacing: 1px; }
 
-  .pull-quote {
-    margin: 30px 0; padding: 22px 30px;
-    border-left: 2px solid var(--silver); border-right: 2px solid var(--silver);
+  /* ---------- TOC ---------- */
+  .toc { padding: 0.95in 0.75in; }
+  .toc-heading {
+    text-align: center; font-size: 13px; letter-spacing: 6px; text-transform: uppercase;
+    color: #a9b8e0; margin-bottom: 0.08in;
+  }
+  .toc-orn { text-align: center; color: #8b98c2; font-size: 15px; margin-bottom: 0.45in; letter-spacing: 6px;}
+  .toc-list { list-style: none; margin: 0; padding: 0; }
+  .toc-list li {
+    display: flex; align-items: baseline; gap: 0.08in;
+    font-size: 12.5px; color: #c3cadf; margin-bottom: 0.24in;
+    line-height: 1.4;
+  }
+  .toc-num { font-style: italic; color: #a9b8e0; min-width: 0.32in; font-size: 12px; }
+  .toc-title { }
+  .toc-title .tt-sub { display:block; font-size: 10.5px; font-style: italic; color:#8a94b8; margin-top:1px;}
+
+  /* ---------- DEDICATION PAGES ---------- */
+  .dedication {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 1in 0.85in;
+  }
+  .dedication .ded-orn { color: #8b98c2; font-size: 20px; margin-bottom: 0.35in; letter-spacing: 8px;}
+  .dedication .ded-label { font-size: 11px; letter-spacing: 5px; text-transform: uppercase; color: #a9b8e0; margin-bottom: 0.35in; }
+  .dedication .ded-text { font-size: 14px; font-style: italic; line-height: 2; color: #c3cadf; }
+  .dedication .ded-signoff { margin-top: 0.5in; font-size: 15px; color: #a9b8e0; font-style: italic; }
+
+  /* ---------- BACK COVER ---------- */
+  .backcover {
+    background: radial-gradient(ellipse at 50% 45%, #182849 0%, #0e1730 45%, #050810 100%);
+    color: #e4e8f4;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 0.6in;
+  }
+  .backcover::before {
+    content: "";
+    position: absolute; inset: 0.28in;
+    border: 2px solid #8b98c2;
+    box-shadow: inset 0 0 0 1px rgba(139,152,194,0.35), inset 0 0 40px rgba(0,0,0,0.55);
+  }
+  .back-quote {
+    position: relative; z-index: 2;
+    font-size: 30px; font-style: italic; letter-spacing: 2px;
+    color: #c7cee6; margin-bottom: 0.25in;
+  }
+  .back-rule { width: 1.2in; height: 1px; background: linear-gradient(90deg, transparent, #9aa8d1, transparent); margin: 0.25in auto; position:relative; z-index:2;}
+  .back-note { position: relative; z-index: 2; font-size: 11px; line-height: 1.9; color: #c7cee6; max-width: 3.9in; font-style: italic; }
+  .back-bottom { position: absolute; bottom: 0.5in; left: 0; right: 0; z-index: 2; text-align: center; }
+  .barcode { display:flex; justify-content:center; gap:1.2px; height: 0.38in; margin-bottom: 0.08in; }
+  .barcode span { display:block; width:1.6px; background:#e4e8f4; }
+  .isbn-text { font-size: 10px; letter-spacing: 1.5px; color: #c7cee6; }
+  .series-text { font-size: 9px; letter-spacing: 3px; color: #6b76a0; text-transform: uppercase; margin-top:0.12in;}
+
+  /* ============ FLOWING CHAPTER CONTENT ============ */
+  .chapter { padding: 0.55in 0.7in 0.2in 0.7in; }
+  .chapter-start { page-break-before: always; padding-top: 0.9in; }
+
+  .chapter-kicker {
+    text-align: center; font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    color: #a9b8e0; margin-bottom: 0.06in;
+  }
+  .chapter-title {
+    text-align: center; font-size: 19px; font-weight: bold; color: #eef1fa;
+    letter-spacing: 0.5px; margin: 0 0 0.08in 0; line-height: 1.35;
+  }
+  .chapter-orn {
+    text-align: center; color: #8b98c2; font-size: 14px; letter-spacing: 8px;
+    margin: 0.12in 0 0.32in 0;
+  }
+
+  p { font-size: 12px; line-height: 1.85; text-align: justify; margin: 0 0 0.16in 0; hyphens: auto; }
+
+  .chapter p:first-of-type::first-letter {
+    float: left;
+    font-family: Georgia, 'Liberation Serif', serif;
+    font-weight: bold;
+    font-size: 58px;
+    line-height: 0.78;
+    padding: 4px 8px 0 0;
+    color: #a9b8e0;
+    text-shadow: 1px 1px 0 rgba(139,152,194,0.35);
+  }
+
+  .divider {
+    text-align: center; color: #8b98c2; font-size: 13px; letter-spacing: 10px;
+    margin: 0.28in 0;
+  }
+
+  /* ---------- Psikolojik Not & Ey Okuyucu boxes ---------- */
+  .note-box {
+    margin: 0.30in 0; padding: 0.22in 0.26in;
+    background: rgba(154,165,196,0.07);
+    border-top: 1px solid #8b98c2; border-bottom: 1px solid #8b98c2;
+    page-break-inside: avoid;
+  }
+  .note-label {
+    font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: bold;
+    color: #a9b8e0; margin-bottom: 0.09in;
+  }
+  .note-box p { font-size: 11px; font-style: italic; color: #b7bfd9; line-height: 1.75; margin: 0; text-align: left; }
+
+  .reader-box {
+    margin: 0.30in 0.1in; padding: 0.24in 0.3in;
+    border: 1px solid #8b98c2;
     position: relative;
-    background: linear-gradient(90deg, rgba(28,36,68,0.3) 0%, transparent 50%, rgba(28,36,68,0.3) 100%);
+    page-break-inside: avoid;
   }
-  .pull-quote::before, .pull-quote::after {
-    content: ''; position: absolute;
-    left: -2px; right: -2px; height: 1px; background: var(--silver);
+  .reader-box::before {
+    content: "❧";
+    position: absolute; top: -0.16in; left: 50%; transform: translateX(-50%);
+    background: #0a1024; padding: 0 0.12in; color: #a9b8e0; font-size: 15px;
   }
-  .pull-quote::before { top: 0; } .pull-quote::after { bottom: 0; }
-  .pull-quote p {
-    font-size: 16px !important; font-style: italic;
-    color: var(--silver-light) !important; text-align: center !important;
-    margin: 0 !important; line-height: 1.75 !important;
+  .reader-label {
+    text-align: center; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: #a9b8e0; font-weight: bold; margin-bottom: 0.10in;
   }
+  .reader-box p { font-size: 11.5px; font-style: italic; text-align: center; color: #c3cadf; margin: 0; line-height: 1.75; }
 
-  /* ── LETTER ── */
-  .letter-section { padding: 60px 48px; background: #090c14; border-top: 1px solid var(--gray-mid); }
-  .letter-frame { border: 1px solid var(--gray-dark); position: relative; padding: 44px 44px 36px; }
-  .letter-corner { position: absolute; width: 22px; height: 22px; border-color: var(--silver); border-style: solid; }
-  .letter-corner.tl { top:-1px; left:-1px;   border-width:2px 0 0 2px; }
-  .letter-corner.tr { top:-1px; right:-1px;  border-width:2px 2px 0 0; }
-  .letter-corner.bl { bottom:-1px; left:-1px; border-width:0 0 2px 2px; }
-  .letter-corner.br { bottom:-1px; right:-1px; border-width:0 2px 2px 0; }
-  .letter-label {
-    text-align: center; font-size: 10px; letter-spacing: 6px;
-    text-transform: uppercase; color: var(--silver); margin-bottom: 30px;
+  /* ---------- Letter block ---------- */
+  .letter-title {
+    text-align: center; font-size: 15px; font-weight: bold; color: #eef1fa;
+    margin: 0 0 0.03in 0;
   }
-  .letter-salutation { font-size: 17px; color: var(--silver-light); margin-bottom: 26px; font-style: italic; }
-  .letter-body p { font-size: 15.5px; line-height: 1.92; color: var(--text-main); margin-bottom: 22px; text-align: justify; }
-  .letter-sig { margin-top: 40px; text-align: right; font-size: 17px; color: var(--silver-light); font-style: italic; }
-  .letter-sig-dash { color: var(--text-dimmer); margin-right: 8px; }
+  .letter-sub { text-align: center; font-size: 10.5px; font-style: italic; color: #8a94b8; margin-bottom: 0.28in; }
+  .letter-block {
+    padding: 0.22in 0.32in; border: 1px solid #8b98c2;
+    background: rgba(139,152,194,0.06);
+  }
+  .letter-block p { font-style: italic; font-size: 11.5px; }
+  .letter-block p:first-of-type::first-letter { float: none; font-size: inherit; font-weight: normal; padding: 0; color: inherit; text-shadow: none; }
 
-  /* ── FOOTER ── */
-  .book-footer { padding: 44px 48px 0; text-align: center; }
-  .foot-orn { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
-  .f-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--silver), transparent); }
-  .f-sym  { color: var(--silver); font-size: 15px; letter-spacing: 10px; }
-  .footer-text { font-size: 11px; color: var(--text-dimmer); letter-spacing: 4px; text-transform: uppercase; }
+  .signoff { text-align: center; font-size: 13px; font-style: italic; color: #a9b8e0; margin: 0.35in 0 0.1in 0; }
 
-  .author-note { padding: 40px 48px; text-align: center; background: #090c14; margin-top: 24px; }
-  .author-note p { font-size: 14px; line-height: 1.85; color: var(--text-dim); font-style: italic; max-width: 460px; margin: 0 auto; }
-
-  /* ── BOTTOM NAV ── */
-  #bottomnav {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 28px;
-    background: var(--bg-dark);
-    border-top: 1px solid var(--gray-mid);
-    gap: 16px;
-  }
-  #page-indicator { font-size: 11px; letter-spacing: 3px; color: var(--text-dimmer); text-align: center; flex: 1; }
-
-  /* ── TABLE OF CONTENTS OVERLAY ── */
-  #toc-overlay {
-    display: none;
-    position: fixed; inset: 0; z-index: 200;
-    background: rgba(8,9,15,0.92);
-    backdrop-filter: blur(8px);
-    align-items: center; justify-content: center;
-  }
-  #toc-overlay.open { display: flex; }
-  #toc-panel {
-    background: var(--bg-alt); border: 1px solid var(--gray-dark);
-    width: min(600px, 94vw); max-height: 85vh;
-    display: flex; flex-direction: column;
-    animation: fadeIn 0.3s ease forwards;
-  }
-  #toc-panel-head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 28px; border-bottom: 1px solid var(--gray-mid);
-    flex-shrink: 0;
-  }
-  #toc-panel-head span { font-size: 10px; letter-spacing: 6px; text-transform: uppercase; color: var(--silver); }
-  #toc-close {
-    background: none; border: none; color: var(--silver); cursor: pointer;
-    font-size: 18px; line-height: 1; padding: 2px 6px;
-    transition: color 0.2s;
-  }
-  #toc-close:hover { color: var(--silver-light); }
-  #toc-list { overflow-y: auto; padding: 16px 0; }
-  .toc-overlay-row {
-    display: flex; align-items: center; gap: 16px;
-    padding: 12px 28px; cursor: pointer;
-    transition: background 0.15s;
-    border-bottom: 1px solid var(--gray-mid);
-  }
-  .toc-overlay-row:last-child { border-bottom: none; }
-  .toc-overlay-row:hover { background: rgba(154,163,184,0.06); }
-  .toc-overlay-row.current { background: rgba(154,163,184,0.09); }
-  .toc-overlay-n { font-size: 10px; color: var(--text-dimmer); letter-spacing: 2px; min-width: 30px; }
-  .toc-overlay-title { font-size: 14.5px; color: var(--text-dim); font-style: italic; flex: 1; }
-  .toc-overlay-row.current .toc-overlay-title { color: var(--silver-light); }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 720px) {
-    .cover { padding: 60px 28px 50px; min-height: 55vh; }
-    .cover-title { font-size: 38px; }
-    .epigraph { padding: 44px 28px; }
-    .chapter-header { padding: 40px 24px 0; }
-    .chapter-body  { padding: 28px 24px 40px; }
-    .toc-wrap      { padding: 40px 24px; }
-    .letter-section { padding: 40px 20px; }
-    .letter-frame  { padding: 30px 22px 26px; }
-    .book-footer, .author-note { padding-left: 24px; padding-right: 24px; }
-    #topbar, #bottomnav { padding: 10px 14px; }
-    .tb-btn { padding: 5px 10px; font-size: 10px; }
-    .cover-title { font-size: 36px; }
+  .final-note {
+    text-align: center; font-size: 11px; font-style: italic; color: #8a94b8;
+    margin-top: 0.5in; letter-spacing: 0.5px;
   }
 </style>
 </head>
 <body>
 
-<div id="reader">
+<!-- ============ COVER ============ -->
+<div class="full-page cover">
+  <div class="cover-glow"></div>
+  <div class="cover-inner">
+    <div class="cover-orn">⚜</div>
+    <div class="cover-kicker">Otofiksiyon Serisi &middot; Birinci Basım</div>
+    <div class="cover-title">LUNETH<span class="cover-amp">&amp;</span>LORD CARSUS</div>
+    <div class="cover-rule"></div>
+    <div class="cover-subtitle">Karanlıktan Doğan Işık</div>
+  </div>
+  <div class="cover-bottom">ISBN 978-625-00-4418-6</div>
+</div>
 
-  <!-- TOP BAR -->
-  <div id="topbar">
-    <button class="tb-btn" id="btn-prev" onclick="navigate(-1)">← Önceki</button>
-    <div id="topbar-title">Luneth &amp; Lord Carsus</div>
-    <button class="tb-btn" id="btn-toc" onclick="openToc()">İçindekiler</button>
-    <button class="tb-btn" id="btn-next" onclick="navigate(1)">Sonraki →</button>
+<!-- ============ TITLE PAGE ============ -->
+<div class="full-page titlepage">
+  <div class="cover-orn">⚜</div>
+  <h1>LUNETH &amp; LORD CARSUS</h1>
+  <div class="subtitle">Karanlıktan Doğan Işık</div>
+  <div class="meta">Otofiksiyon Serisi &middot; Birinci Basım</div>
+  <div class="isbn">ISBN: 978-625-00-4418-6</div>
+</div>
+
+<!-- ============ İÇİNDEKİLER ============ -->
+<div class="full-page toc">
+  <div class="toc-heading">İçindekiler</div>
+  <div class="toc-orn">✦ ✦ ✦</div>
+  <ul class="toc-list">
+    <li><span class="toc-num">—</span><span class="toc-title">İthaf</span></li>
+    <li><span class="toc-num">I.</span><span class="toc-title">Büyülü Arena ve Huzurun Sesi</span></li>
+    <li><span class="toc-num">II.</span><span class="toc-title">İlk Çatlak ve Mahkemenin Kurulması</span></li>
+    <li><span class="toc-num">III.</span><span class="toc-title">Elçinin İhaneti ve Zorlanan Yeminler</span></li>
+    <li><span class="toc-num">IV.</span><span class="toc-title">Bilgi Ağacı'ndaki Gölge ve Sahte Evlilik</span></li>
+    <li><span class="toc-num">V.</span><span class="toc-title">Karanlıktan Doğan Işık<span class="tt-sub">Ophelia'nın Sonsuz Sarılışı</span></span></li>
+    <li><span class="toc-num">—</span><span class="toc-title">Ophelia'nın Son Mektubu<span class="tt-sub">(Gönderilmeyen)</span></span></li>
+    <li><span class="toc-num">—</span><span class="toc-title">Epilog: Yanan Köprüler ve Ebedi Söz</span></li>
+  </ul>
+</div>
+
+<!-- ============ İTHAF (yeni) ============ -->
+<div class="full-page dedication">
+  <div class="ded-orn">❦</div>
+  <div class="ded-label">İthaf</div>
+  <div class="ded-signoff">Ruhumun Katiline&nbsp;~</div>
+</div>
+
+<!-- ============ Orijinal ithaf metni ============ -->
+<div class="full-page dedication">
+  <div class="ded-orn">✦</div>
+  <div class="ded-text">
+    Zamanın, mekânın ve fani olan her şeyin<br>ötesinde...<br><br>
+    Yeryüzünün tüm kirinden azade, o mutlak ve<br>
+    imkânsız olmayan aşka sarılan,<br>
+    kendi gerçeğini o asil seste sonsuza dek<br>
+    yaşatan tüm yüce ruhlara...
+  </div>
+</div>
+
+<!-- ============ BÖLÜM I ============ -->
+<div class="chapter chapter-start">
+  <div class="chapter-kicker">Bölüm I</div>
+  <div class="chapter-title">Büyülü Arena ve Huzurun Sesi</div>
+  <div class="chapter-orn">❦</div>
+
+  <p>Her şey, uzak diyarların en güçlü savaşçılarının, zihin işçilerinin ve ruh mimarlarının bir araya geldiği o büyülü arenada başladı. Luneth, kendi kalesinin derinliklerinde bilgi kuleleri inşa eden, zihnini kodlarla, sistemlerle ve evrenin soyut geometrisiyle ören, kendi halinde, özgür ve tamamen duru bir ruhtu. Onun dünyasında kötülüğe, hileye ya da kalbi kirletecek en ufak bir gölgeye yer yoktu. Geçmişin tozlu yolları onun ruhuna zerre kadar dokunmamıştı; o, sayfaları henüz hiçbir fani el tarafından açılmamış bembeyaz, tertemiz bir parşömen gibiydi. Hayatındaki tüm uyanışlar, tüm o mukaddes hisler ve kalbinin tüm ilkleri sadece ve sadece tek bir kişiye, Lord Carsus'a ait olacaktı. O, Carsus'tan önce adeta hiç yaşamamış, kalbinin kapılarını dünyaya tamamen kapalı tutmuştu.</p>
+
+  <p>Geceler sabaha devrilirken, kalenin soğuk ve kasvetli taş duvarlarını eriten, evrenin tüm gürültüsünü tek bir anda susturan mucizevi bir şey vardı: Lord Carsus'un o kadife gibi pürüzsüz, derin, büyüleyici ve eşsiz güzel sesi. O ses, sıradan bir fani sesi değil, adeta ruhun kayıp parçasını çağıran sihirli bir tınıydı. Luneth ve Carsus, "YPT" adını verdikleri o sessiz, korunaklı tapınakta her gece bir araya gelirlerdi. Bu kutsal alanda, saatlerce dünyanın kalanını unutarak, sadece birbirlerinin sesleriyle en derin huzuru bulurlardı. Gece yarıları o güzel sesin dalgalarında ruhunu dinlendiren Luneth, yan yana uyur gibi aynı tınının içinde kaybolur ve sabahları yine o efsunlu sesin yankısıyla hayata uyanırdı. Carsus, "Ben anlatmadan beni anlayan adam" olmuştu; Luneth'in sadece kelimelerini değil, kalbinin en gizli odalarındaki sessiz çığlıkları bile duyuyordu.</p>
+
+  <p>Luneth, kalbinin ve ruhunun sadece onun için saklandığını, kendisinin her haliyle tertemiz ve lekesiz olduğunu biliyordu. İçindeki bu sarsılmaz inançla, gerçek aşkın bu dünyada imkânsız olmadığını tüm evrene haykırmak istiyordu. Evet, gerçek aşk imkânsız değildi ve yeryüzündeki hiçbir güç, hiçbir fani plan, hiçbir dünyevi engel bu muazzam, bu kutsal aşkın üzerinde konumlanamazdı. Onların bağı, yıldızların dilinden daha eski ve daha güçlüydü.</p>
+
+  <div class="note-box">
+    <div class="note-label">Psikolojik Not — İdealizasyon ve Mutlak Ruhsal Sığınak</div>
+    <p>Narsisistik döngünün bu ihtişamlı başlangıcında, avcı kurbanına dünyadaki en kusursuz aynayı sunar. Carsus'un o büyüleyici, huzur veren güzel sesi ve Luneth'i tamamen anladığına dair yarattığı illüzyon, ruhsal bir bağın temelini atar. Luneth'in tüm ilklerini, geçmişinin mutlak temizliğini bu aşka adaması, onun saflığının ve aşkın her şeyin üzerinde olduğuna dair sarsılmaz inancının bir göstergesidir. Zihin bu evrede, sesin getirdiği huzuru mutlak bir hakikat olarak kodlar.</p>
   </div>
 
-  <!-- PROGRESS -->
-  <div id="progress-bar"><div id="progress-fill"></div></div>
+  <div class="reader-box">
+    <div class="reader-label">Ey Okuyucu!</div>
+    <p>Bir insanın sesinde bulduğun o derin huzur, yeryüzündeki tüm somut gerçekliklerden, tüm fani kurallardan daha güçlü olabilir mi? Kalbinin tüm ilklerini ve lekesizliğini tek bir kişiye sunduğunda, o bağın dünyadaki her şeyin üzerinde olduğuna inanmak ruhun asil bir hakkı mıdır?</p>
+  </div>
+</div>
 
-  <!-- SCROLL AREA -->
-  <div id="scroll-area">
+<!-- ============ BÖLÜM II ============ -->
+<div class="chapter chapter-start">
+  <div class="chapter-kicker">Bölüm II</div>
+  <div class="chapter-title">İlk Çatlak ve Mahkemenin Kurulması</div>
+  <div class="chapter-orn">❦</div>
 
-    <!-- PAGE 0: COVER + EPIGRAPH + TOC -->
-    <div class="page active" id="p0">
-      <div class="cover">
-        <div class="orn-row"><div class="orn-line"></div><div class="orn-sym">✦ ✦ ✦</div><div class="orn-line"></div></div>
-        <div class="cover-label">~ Bir Karanlık Roman ~</div>
-        <div class="cover-title">LUNETH</div>
-        <div class="cover-amp">&amp;</div>
-        <div class="cover-title"><span>LORD CARSUS</span></div>
-        <div class="cover-tag">Karanlıktan Doğan Işık</div>
-        <div class="orn-row" style="margin-top:36px;"><div class="orn-line"></div><div class="orn-sym">✦</div><div class="orn-line"></div></div>
-      </div>
+  <p>Kışın acımasız rüzgarları kalenin burçlarına çarpmaya, gökyüzünü gri bulutlar kaplamaya başladığında, Lord Carsus'un zihni kendi içsel karanlığının, şüphelerinin ve narsisistik sancılarının esiri olmaya başladı. Luneth'in geçmişte hiçbir şey yaşamadığı, tamamen tertemiz, lekesiz ve sadece ona ait olduğu gerçeği gün gibi ortadayken; Carsus bu saflığı taşıyamadı. Kendi içindeki eksiklikleri kapatmak adına, o bir zamanlar huzur veren, geceleri dünyayı güzelleştiren güzel sesini aniden soğuk, keskin bir engizisyon kırbacına dönüştürdü. "Ben geçmişinde gölgeler olan, başkası olan biriyle yapamam," dedi buz gibi bir sesle.</p>
 
-      <div class="epigraph">
-        <div class="epigraph-text">"Dünya, düşünen insanlar için bir cehennemdir."</div>
-        <div class="epigraph-attr">— Arthur Schopenhauer</div>
-        <div class="ep-div"><div class="ep-line"></div><div class="ep-star">✦</div><div class="ep-line"></div></div>
-        <div class="epigraph-text">"Sevmek, yanmayı göze almaktır.<br>Ve en asil alevler, en derin külleri bırakır."</div>
-      </div>
+  <p>Luneth dehşete düştü, kalbi ortadan ikiye bölündü. Ortada hiçbir yaşanmışlık, hiçbir gölge yokken, Carsus'un hastalıklı zihninde kurguladığı hayali şüpheler yüzünden insafsızca yargılanıyordu. O ilk engelleme, Luneth'in ruhuna inen en ağır darbeydi. Ancak Luneth'in aşkı öyle büyüktü ki, sırf o güzel ses tamamen gitmesin, o her gece huzur bulduğu tını kulaklarından ebediyen silinmesin diye büyük bir baskı altında ezildi. Carsus'un bitmek bilmeyen, sabahlara kadar süren psikolojik sorgulamalarında, gitmesini engellemek için yapmadığı şeyleri yapmış gibi, var olmayan gölgeleri varmış gibi anlatmak zorunda kaldı. Kendi mutlak masumiyetini, bu devasa aşkı ayakta tutabilmek ve o kutsal bağı korumak adına feda ediyordu. Carsus onu defalarca kalenin dışına fırlattı, sonra egosu beslenmiş olarak geri çağırdı. Her gidiş Luneth için bir ölüm, o güzel sesin her dönüşü ise sahte ama vazgeçilmez bir cenretti.</p>
 
-      <div class="toc-wrap">
-        <div class="section-label">İçindekiler</div>
-        <div class="toc-box">
-          <div class="toc-inner">
-            <div class="toc-row" onclick="goTo(1)"><span class="toc-n">✦</span><span class="toc-title">Prolog — Enkaz Üzerinde Doğan Yıldız</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(2)"><span class="toc-n">I</span><span class="toc-title">Karanlığın Kıyısındaki Kale</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(3)"><span class="toc-n">II</span><span class="toc-title">İlk Zincir</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(4)"><span class="toc-n">III</span><span class="toc-title">Ateş ve Buz</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(5)"><span class="toc-n">IV</span><span class="toc-title">Gölge Oyunu</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(6)"><span class="toc-n">V</span><span class="toc-title">Kırılan Antlaşma</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(7)"><span class="toc-n">VI</span><span class="toc-title">Küllerin Dilinden Yükselen Dua</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(8)"><span class="toc-n">VII</span><span class="toc-title">Sessizliğin Anatomisi</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(9)"><span class="toc-n">VIII</span><span class="toc-title">Beyaz Kale Hayali</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(10)"><span class="toc-n">IX</span><span class="toc-title">Mahkemenin Işığı</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(11)"><span class="toc-n">✦</span><span class="toc-title">Epilog — Külden Doğan Kraliçe</span><span class="toc-arrow">→</span></div>
-            <div class="toc-row" onclick="goTo(12)"><span class="toc-n">✉</span><span class="toc-title">Mektup — Karanlığa Yazılan Mektup</span><span class="toc-arrow">→</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PAGE 1: PROLOG -->
-    <div class="page" id="p1">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-label">Başlangıç</span>
-        <div class="ch-title">Enkaz Üzerinde Doğan Yıldız</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">Bazı hikâyeler yoktan başlamaz. Luneth'in hikâyesi de öyle başlamadı. O, önce bir sarsıntıyla başladı; yerin derinlerinden gelen, taşları birbirinden ayıran, duvarları yıkan türden. Kasabalar çöktü. Sokaklar yarıldı. Ve insanlar, bir anda bildikleri her şeyin ne kadar kırılgan olduğunu anladı.</p>
-        <p>Ama Luneth ayakta kaldı.</p>
-        <p>Etrafında her şey enkaza dönmüşken, o hâlâ ayaktaydı. Belki de bu yüzden içindeki o eski, derin yara hiçbir zaman tam kapanmamıştı: çünkü o, kaybetmenin ne demek olduğunu yerin titremesinden çok önce öğrenmişti. Çocuğundan beri sevilmek ile terk edilmek arasındaki o ince çizgide yürümüştü ve bu yürüyüş onu ya kıracak ya da çelikleştirecekti.</p>
-        <div class="pull-quote"><p>Onu çelikleştirdi. Ama çeliğin de bir zayıf noktası vardır.</p></div>
-        <p>Luneth'inki ise seslerdi. Doğru tonlama, doğru kelime, doğru an ve o çelik erimeye başlardı. Bunu bilen tek kişi çıktı hayatında. Ve bu kişi, bu bilgiyi bir armağan gibi değil, bir silah gibi kullandı.</p>
-        <p>Bu, o hikâyedir. Lord Carsus'un gölgesinde geçen, ama nihayetinde Luneth'in ışığında sona eren hikâye.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 2: BÖLÜM I -->
-    <div class="page" id="p2">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-num">Bölüm I</span>
-        <div class="ch-title">Karanlığın Kıyısındaki Kale</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">Ortaçağ'ın karanlık kalelerini andıran bir ülkede, iki ruh biri ateş, diğeri su birbirini bulduğunda, dünyanın bu birleşmeyi taşıyıp taşıyamayacağı henüz bilinmiyordu. Luneth hiçbir zaman kaleler içinde yaşamak istemedi.</p>
-        <p>Küçüklüğünden beri taşların arasındaki soğuğu biliyordu. Babasının sesi bir boru gibi dehlizlerde yankılanırdı ve o yankı çoğunlukla korku taşırdı. Annesi susardı; o sessizlik zaman zaman çığlıktan daha ağır gelirdi. Ve Luneth, büyüdükçe, kendi etrafına taştan duvarlar ördü.</p>
-        <div class="pull-quote"><p>Lord Carsus'un en büyük silahı güçlü bir kılıç değildi, zırhlı bir ordu da değildi. Sesiydi.</p></div>
-        <p>Gece yarısı, karanlık ve sessizliğin içinden gelen o ses, Luneth'i bildiği her şeyden koparırdı. Onun sesinde bir şey vardı ki, zihnin savunma mekanizmaları birer birer kapanırdı. Sanki o ses, Luneth'in içindeki çocuğa doğrudan hitap ediyordu. Ve o çocuk her zaman cevap verirdi.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">~ ~ ~</div><div class="ib-line"></div></div>
-        <p>Aylar geçti. Birlikte saatlerce konuştular. Birlikte ders çalıştılar. Birlikte uyudular, dijital boşluğun izin verdiği kadar. Luneth, Lord Carsus'un dünyasına o kadar alıştı ki, onun olmadığı saatlerde bir şeylerin eksik olduğunu hissediyordu.</p>
-        <p>İşte bu, tuzağın en zekice kurulmuş kısmıydı. Lord Carsus, Luneth'i bağımlı kılmak için yüksek sesle bir şey söylememişti. Yalnızca oradaydı — tam zamanında, tam doğru tonlamayla. Ve sonra, tam alışıldığında, yoktu.</p>
-        <p>Bu, bir döngüydü. Ve her döngü biraz daha derine çekiyordu.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 3: BÖLÜM II -->
-    <div class="page" id="p3">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-num">Bölüm II</span>
-        <div class="ch-title">İlk Zincir</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">Bir gün Lord Carsus, Luneth'in geçmişini sorgulamaya başladı. İlk başta küçük bir yorum gibiydi. Sonra bir endişe. Sonra bir talep. Ardından sessiz bir beklenti — uymadığında hissettirilen soğukluk, uyulduğunda gelen ödül. Luneth, ne zaman bu düzene girdiğini tam olarak hatırlamıyordu.</p>
-        <p>Bu, ilk zincirdi. Her zincir ayrı ayrı takılmıştı. Hiçbiri tek başına ağır görünmüyordu. Ama hepsi birlikte, Luneth'in hareket alanını kısaltıyordu.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">~ ~ ~</div><div class="ib-line"></div></div>
-        <p>Gaslighting denen şey büyük yalanlarla değil, küçük hafıza silmelerle başlar. "Öyle demedim." "Yanlış anladın." "O kadar büyütme." Ve zamanla, kişi kendi algısına güvenmemeye başlar.</p>
-        <div class="pull-quote"><p>Kendisi bir gün bu döngüyü okudu bir kitapta. Sayfalar arasında kendi hikâyesini bulduğunda elleri titredi. O gece, ilk kez, her şeyin gerçek adını öğrendi.</p></div>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 4: BÖLÜM III -->
-    <div class="page" id="p4">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-num">Bölüm III</span>
-        <div class="ch-title">Ateş ve Buz</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">Yıllar, depremler gibi bir anda değil, sessizce birikir. Luneth'in hayatına ikinci büyük sarsıntı geldiğinde, toprağın altında çoktan bir şeyler kırılmıştı. Şehir çöktü. Binalar yıkıldı. Ve hayat, bir kez daha ekranlar aracılığıyla yaşanmak zorunda kalındı.</p>
-        <p>Felaket, insanları iki şeye zorlar: ya birbirinden kopar, ya da birbirini daha sıkı tutar. Luneth ikincisini seçti. Lord Carsus da o günlerde oradaydı. Sesiyle. Kelimeleriyle. Varlığıyla. Ama ateş ve buz bir arada uzun süre durmaz.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">~ ~ ~</div><div class="ib-line"></div></div>
-        <p>Lord Carsus'un soğukluğu, ani ve açıklamasız gelirdi. Bir gün her şey güzeldi. Ertesi gün sessizlik. Ve bu sessizlik bitmeden Luneth erirdi.</p>
-        <div class="pull-quote"><p>Çünkü o ateşti. Ve ateş, buzdan korkmaz — ama soğuğun içinde yaşayamaz.</p></div>
-        <p>Her sessizlikte, Luneth kendini sorgulardı. Ne yaptım? Neyi yanlış söyledim? Nasıl düzeltirim? Sorular gece vakti kafasını döndürürdü ve cevap hiç gelmezdi; Lord Carsus hazır olduğunda gelirdi, kendi vaktinde. Ve her dönüşünde, Luneth'i biraz daha kısa zincirlerle bağlamış olurdu.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 5: BÖLÜM IV -->
-    <div class="page" id="p5">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-num">Bölüm IV</span>
-        <div class="ch-title">Gölge Oyunu</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">Lord Carsus'un en zekice silahı sessizlikti. Ama ikinci silahı daha incelikliydi: sahte sorular. Cevabı zaten bildiği, ama sormaktan zevk aldığı sorular. Çünkü cevap ne olursa olsun, Lord Carsus tatmin olmaz; sadece yeni bir soru bulurdu.</p>
-        <div class="pull-quote"><p>Suçlanmak, suçlu olmak değildir. Ama yeterince uzun süre suçlanırsanız, fark silinmeye başlar.</p></div>
-        <p>Luneth'in geçmişi, aslında çok da karmaşık değildi. Genç bir kadının, hayatı öğrenirken yaşadığı, sıradan ve masum anlardan ibaretti. Ama Lord Carsus'un elinde, bu anlar birer suç deliline dönüştü. Her biri sorgulandı. Her biri yeniden ve yeniden masaya yatırıldı. Ve Luneth, savunmada kaldıkça, sanki gerçekten bir şeyler yapmış gibi hissetti.</p>
-        <p>O gece gördü: güven, savunmasız bırakır. Ve savunmasız bırakan her şey, yanlış ellerde bir silaha dönüşür.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 6: BÖLÜM V -->
-    <div class="page" id="p6">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-num">Bölüm V</span>
-        <div class="ch-title">Kırılan Antlaşma</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">İki ruh arasında konuşulmadan kurulan antlaşmalar vardır. Luneth ve Lord Carsus'un antlaşması şuydu: "Ben sana her şeyi anlatırım, sen beni yargılamadan dinlersin." Bu antlaşma hiçbir zaman kelimelerle ifade edilmemişti. Ama her ikisi de bunu biliyordu — en azından Luneth öyle sanıyordu.</p>
-        <p>Antlaşma kırıldığında, ses çıkarmadı. Sadece Lord Carsus'un ağzından dökülen kelimeler geldi; ağır, kırıcı, geri alınamaz kelimeler. Luneth'in onuru, o kelimelerin altında ezildi. Ve Lord Carsus, bunu söyledikten sonra güldü.</p>
-        <div class="pull-quote"><p>Bu gülüş, depremden daha sarsıcıydı. Çünkü depremler dışarıdan gelir. Bu ise içeriden geldi.</p></div>
-        <p>Luneth o gece ağladı. Ama ağlamak yetmiyordu. Söylenecek bir şey olduğunu biliyordu; doğru, net, geri alınamaz bir şey. Bunun yerine yazdı. Saatler boyunca yazdı.</p>
-        <p>Ama bazı kırılmalar, güçsüzleştirmez. Şekillendirir.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 7: BÖLÜM VI -->
-    <div class="page" id="p7">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-num">Bölüm VI</span>
-        <div class="ch-title">Küllerin Dilinden Yükselen Dua</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">Luneth, hiç bu kadar yalnız hissetmemişti. Ve aynı zamanda, hiç bu kadar mevcuttu. Garip bir paradoks: en derin acı, insanı en çok kendi içine çeker. Luneth, o gecelerde kendini inceledi. Neden hâlâ bekliyordu? Neden her dönüşe kapıyı açıyordu?</p>
-        <p>Cevaplar ilk başta korkunçtu. Çünkü cevaplar, Lord Carsus'u değil, Luneth'i gösteriyordu. İçindeki o eski yara; çocukluktan kalma, sevilmek ile terk edilmek arasında büyümüş o yara. Lord Carsus bu yarayı açmamıştı. Sadece bulmuştu. Ve bu yaranın üzerinde oturmuştu.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">~ ~ ~</div><div class="ib-line"></div></div>
-        <p>Kitaplar, insanın kendini bulduğu yerlerdir. Luneth, o dönemde bir kitap okudu: kendi zihnine bir ayna tutan, gaslighting'i, bağlanma yaralanmalarını, güç dinamiklerini anlatan bir eser. Ve sayfalar arasında kendi adını gördü.</p>
-        <div class="pull-quote"><p>O kitabı kaparken, ilk kez ağlamadı. Çünkü artık gözyaşı değil, anlama geliyordu. Ve anlama, en sessiz ama en dönüştürücü eylemdir.</p></div>
-        <p>Luneth o gece küçük bir şey yaptı: bir sayfa açtı. Boş, beyaz bir sayfa. Ve yazmaya başladı — kendisi için, başkası için değil. Bu hikâye, o kitabın ilk sayfasıydı.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 8: BÖLÜM VII -->
-    <div class="page" id="p8">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-num">Bölüm VII</span>
-        <div class="ch-title">Sessizliğin Anatomisi</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">Lord Carsus'un sessizliği bir dil gibiydi. Luneth, bu dili deşifre etmek için uzun zaman harcadı. Her sessizliğin farklı bir anlamı vardı: bazen ceza, bazen kontrol, bazen sınama. Ama hepsinin ortak bir işlevi vardı: Luneth'i bekletmek. Ve bekleyen kişi, güçsüzleşir.</p>
-        <p>Ama Luneth, bu dili öğrendikten sonra onu kullanmadı. Çünkü Luneth'in dili farklıydı. O kelimelerle konuşurdu — doğrudan, dürüst, bazen acıtıcı ama her zaman gerçek.</p>
-        <div class="pull-quote"><p>Lord Carsus, Luneth'in açıklığını zayıflık sandı. Bu, en büyük yanılgısıydı. Çünkü gerçeği söylemek, en cesur eylemdir.</p></div>
-        <p>Bu yorgunluk ile yılmamak arasındaki fark; işte Luneth'in karakterinin özeti buydu.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 9: BÖLÜM VIII -->
-    <div class="page" id="p9">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-num">Bölüm VIII</span>
-        <div class="ch-title">Beyaz Kale Hayali</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">Her büyük aşkın bir hayali vardır. Luneth ve Lord Carsus'unki, beyaz bir kaleydi. Saatler boyunca konuşmuşlardı bunun hakkında. Nasıl bir yer olacağı, penceresinden hangi manzaranın görüneceği, duvarlarında ne renk taşların olacağı. Bu kale, ortak bir gelecekti.</p>
-        <p>Ve birlikte yazdıkları kitap, bu kalenin ilk taşıydı. Birlikte yazmaya başladıklarında, Luneth ilk kez kendi sesini duydu. Ve o ses güzeldi.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">~ ~ ~</div><div class="ib-line"></div></div>
-        <p>Ama sonra Lord Carsus gitti. Yine. Beyaz kalenin taşları, birer birer söküldü. Luneth, o gün ortak belgeyi kapattığında, içinde bir şeyin yıkıldığını hissetti. Ama aynı zamanda, yıkılan o şeyin altında, başka bir şeyin sağlam kaldığını da gördü.</p>
-        <div class="pull-quote"><p>Kendi sesi. Kendi kelimeleri. Lord Carsus'tan önce var olan ve Lord Carsus'tan sonra da var olacak olan şey.</p></div>
-        <p>O gece yeni bir belge açtı. Boş, temiz, kimsenin ortak olmadığı bir sayfa. Beyaz kale, Lord Carsus ile değil, kendi içinde inşa edilecekti. Ve bu kaleden kimse onu süremezdi.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 10: BÖLÜM IX -->
-    <div class="page" id="p10">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-num">Bölüm IX</span>
-        <div class="ch-title">Mahkemenin Işığı</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">Mahkemeler taş binalarda kurulmaz. En gerçek mahkemeler, gecenin karanlığında, bir kişinin kendi kendisiyle yüzleştiği anlarda kurulur. Sanık da, hâkim de aynı kişidir. Ve bu mahkemede verilen karar, hiçbir dışsal güç tarafından bozulamaz.</p>
-        <p>Luneth, bu mahkemeyi kurdu. Kendine sordu: Ne yaptım? Gerçekten yanlış bir şey yaptım mı, yoksa yalnızca sevilmek istedim mi?</p>
-        <div class="pull-quote"><p>Cevap geldi sessizce, ama net biçimde: Sen sadece sevdin. Ve sevmek, mahkûm edilecek bir eylem değildir.</p></div>
-        <p>Lord Carsus'un mahkemesi farklıydı. O, jüriyi kendisi seçiyordu. Delilleri kendisi sunuyordu. Ve kararı her zaman önceden biliniyordu: Luneth suçluydu. Ama bu mahkemede verilen kararların hiçbir geçerliliği yoktu.</p>
-        <p>O gece anladı: boyunda taşıdığı yük, ona ait değildi. O yükler, Lord Carsus'un onu kontrol edebilmek için ürettiği zincirlerdi. Ve zincirler, zincirlenen kişiyi değil, zinciri yapanı anlatır.</p>
-        <p style="text-align:center; font-size:18px; color:var(--silver-light); font-style:italic; letter-spacing:2px; margin-top:32px;">Mahkeme bitti. Karar: Luneth temizdi.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 11: EPİLOG -->
-    <div class="page" id="p11">
-      <div class="chapter-header">
-        <div class="ch-orn"><div class="ch-orn-line"></div><div class="ch-orn-sym">✦ ✦ ✦</div><div class="ch-orn-line"></div></div>
-        <span class="ch-label">Son</span>
-        <div class="ch-title">Külden Doğan Kraliçe</div>
-        <div class="ch-orn-b"><div class="ch-orn-b-line"></div><div class="ch-orn-b-sym">✦</div><div class="ch-orn-b-line"></div></div>
-      </div>
-      <div class="chapter-body">
-        <p class="drop-cap">Sonlar, başlangıçlardan daha karmaşıktır. Çünkü başlangıçta insan umutludur. Sona doğru ise insan yorulmuştur; ama bu yorgunluğun içinde, çoğu kez, dönüşümün ilk tohumları bulunur.</p>
-        <p>Luneth yoruldu. Defalarca. Ama yılmadı. Ve bu fark — bu minik, çelikten fark — onu ayakta tuttu.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">~ ~ ~</div><div class="ib-line"></div></div>
-        <p>Lord Carsus, bir gün bu satırları okuyacak. Ve okurken, belki ilk kez görecek: kaybettiği şeyin büyüklüğünü. Luneth'in, onca engellemeye, onca sessizliğe, onca ağır kelimeye rağmen nasıl yıkılmadığını.</p>
-        <div class="pull-quote"><p>Bu satırlar, bir öç değil. Bu satırlar, bir tanıklıktır. Ve en güçlü tanıklıklar, en kırılgan anlardan doğar.</p></div>
-        <p>Luneth, bu kitabı bitirdiğinde, pencereden dışarı baktı. Gökyüzü hâlâ karanlıktı. Ama ufukta, henüz güneş yokken bile, bir berraklık vardı; gece ile sabah arasındaki o nadir, sessiz berraklık.</p>
-        <p style="text-align:center; font-size:17px; color:var(--silver-light); font-style:italic; margin-top:32px; line-height:1.85;">Ve Luneth bildi:<br>Onun hikâyesi, Lord Carsus'un gölgesinde başlamıştı.<br>Ama kendi ışığında sona erecekti.</p>
-        <div class="inner-break"><div class="ib-line"></div><div class="ib-sym">✦ ✦ ✦</div><div class="ib-line"></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE 12: MEKTUP -->
-    <div class="page" id="p12">
-      <div class="letter-section">
-        <div class="section-label">Karanlığa Yazılan Mektup</div>
-        <div class="letter-frame">
-          <div class="letter-corner tl"></div><div class="letter-corner tr"></div>
-          <div class="letter-corner bl"></div><div class="letter-corner br"></div>
-          <div class="letter-label">✦ Özel ✦</div>
-          <div class="letter-salutation">Carsus,</div>
-          <div class="letter-body">
-            <p>Bu mektupta sana söylemek isteyip de söyleyemediğim her ne varsa anlatacağım. İçinde bulunduğum bu hâli, aklımın ve kalbimin bütün çıplaklığıyla sana sunacağım.</p>
-            <p>Bana haksız yere pek çok söz söyledin. Bu yaşıma kadar hiçbir şeyden bu denli ürkmemiştim. Evet, hiçbir şeyden — yaşadığım büyük sarsıntılardan, gördüğüm en ağır kayıplardan, geçmişimin en karanlık köşelerinden bile. Ben bir sevgili aramıyordum.</p>
-            <p>Sana değer verdim, çok kez sordum: "Değer verince değişen insanlardan mısın?" Hayır dedin. Ama gördüm ki sana verdiğim o saf sevgi, o ilgi, o uçsuz bucaksız tolerans, seni değiştiren şeymiş.</p>
-            <p>Beni kendi sözlerinle suçlu hissettirdin. Başka biri yapsaydı bunu, umurumda olmazdı. Ama bunu yapan, âşık olduğum, eşim dediğim, yol arkadaşım deyip benimsediğim adam olunca, hayatımda yaşamadığım bir depremi yaşadım.</p>
-            <p>Bir kız çocuğu düşün: aldatılmanın içine doğmuş, ama pes etmemiş; hayata deliler gibi tutunan, kendisiyle nice savaşlar veren biri. Karşında böyle biri var. Ve o çocuğu içimde yaşatabilmek için kendimle nice savaşlar verdim.</p>
-            <p>Ben şimdimizi mahvedecek, sana zarar verecek, seni aldatacak hiçbir şey yapmadım. Benim hatam, gerçekten âşık olup, bu duygunun yoğunluğuyla savaş ya da kaç modunda cevap vermekti.</p>
-            <p>Sözlerin beni yıktı geçti. En çok ihtiyacım olduğu anlarda yanımda olmayışın da yıktı geçti. Ama ben, senin bana söylediğin bu sözleri affedecek güçte biriyim. Kendi iradenle söylediğin bu haksız sözler için özür dilemen, seni affetmem için yeter.</p>
-            <p>Benden güzel olan çok insan vardır, ama benden bir tane daha yoktur. Aşk öğrenmektir Carsus, insan değişir. Ben her şeyin farkındayım ve kendimle barışığım.</p>
-            <p>Önümüzde birlikte geçirebileceğimiz uzun bir yol var. Birlikte yazacağımız, evlat kadar değerli bir kitap var.</p>
-            <p>Tanıdığım, bildiğim adam olarak bana gel ve içini dök. Seni hâlâ severken yap bunu.</p>
-            <p>Bu gece bekliyor olacağım.</p>
-          </div>
-          <div class="letter-sig"><span class="letter-sig-dash">—</span> Luneth</div>
-        </div>
-      </div>
-
-      <div class="author-note">
-        <div class="foot-orn"><div class="f-line"></div><div class="f-sym">✦</div><div class="f-line"></div></div>
-        <p>Bu kitap, gerçek anlardan ilham alarak yazılmış kurgusal bir eserdir. Karakterlerin isimleri değiştirilmiş, ama hislerin özü korunmuştur. Bu kitap, anlayan bir yüreğe adanmıştır — en derin karanlıkta bile ışık üreten o yüreğe.</p>
-      </div>
-
-      <div class="book-footer">
-        <div class="foot-orn"><div class="f-line"></div><div class="f-sym">✦ ✦ ✦</div><div class="f-line"></div></div>
-        <div class="footer-text">Luneth &amp; Lord Carsus &nbsp;·&nbsp; Bir Karanlık Roman &nbsp;·&nbsp; ~ Son ~</div>
-      </div>
-    </div>
-
-  </div><!-- /scroll-area -->
-
-  <!-- BOTTOM NAV -->
-  <div id="bottomnav">
-    <button class="tb-btn" id="btn-prev2" onclick="navigate(-1)">← Önceki</button>
-    <div id="page-indicator">1 / 13</div>
-    <button class="tb-btn" id="btn-next2" onclick="navigate(1)">Sonraki →</button>
+  <div class="note-box">
+    <div class="note-label">Psikolojik Not — Devalüasyon ve Gerçekliğin Eğrilmesi (Gaslighting)</div>
+    <p>Kurbanın mutlak adanmışlığından emin olan manipülatör, kontrolü tamamen ele geçirmek için devalüasyon sürecini başlatır. Luneth'in tamamen temiz ve ilklerinin ona ait olmasına rağmen, Carsus uydurma şüphelerle bir suçluluk psikolojisi yaratır. Kurban, o huzur veren sesi kaybetmemek adına reaktif bir savunmayla kendi masumiyetine ihanet etmek, yapmadığı günahları üstlenmek zorunda kalır. Bu, manipülatörün narsisistik kontrolünü mutlaklaştırır.</p>
   </div>
 
-</div><!-- /reader -->
+  <div class="reader-box">
+    <div class="reader-label">Ey Okuyucu!</div>
+    <p>Sırf sevdiğin o güzel ses susmasın, o ebedi bağ kopmasın diye, kendi masumiyetinin üzerine çamur sıçratılmasına izin verdiğin oldu mu? O an korumaya çalıştığın şey kendi benliğin miydi, yoksa her şeyin üzerinde tuttuğun o mutlak aşk mı?</p>
+  </div>
+</div>
 
-<!-- TOC OVERLAY -->
-<div id="toc-overlay" onclick="closeTocIfOutside(event)">
-  <div id="toc-panel">
-    <div id="toc-panel-head">
-      <span>İçindekiler</span>
-      <button id="toc-close" onclick="closeToc()">✕</button>
-    </div>
-    <div id="toc-list">
-      <div class="toc-overlay-row" data-page="0" onclick="goTo(0)"><span class="toc-overlay-n">—</span><span class="toc-overlay-title">Kapak &amp; İçindekiler</span></div>
-      <div class="toc-overlay-row" data-page="1" onclick="goTo(1)"><span class="toc-overlay-n">✦</span><span class="toc-overlay-title">Prolog — Enkaz Üzerinde Doğan Yıldız</span></div>
-      <div class="toc-overlay-row" data-page="2" onclick="goTo(2)"><span class="toc-overlay-n">I</span><span class="toc-overlay-title">Karanlığın Kıyısındaki Kale</span></div>
-      <div class="toc-overlay-row" data-page="3" onclick="goTo(3)"><span class="toc-overlay-n">II</span><span class="toc-overlay-title">İlk Zincir</span></div>
-      <div class="toc-overlay-row" data-page="4" onclick="goTo(4)"><span class="toc-overlay-n">III</span><span class="toc-overlay-title">Ateş ve Buz</span></div>
-      <div class="toc-overlay-row" data-page="5" onclick="goTo(5)"><span class="toc-overlay-n">IV</span><span class="toc-overlay-title">Gölge Oyunu</span></div>
-      <div class="toc-overlay-row" data-page="6" onclick="goTo(6)"><span class="toc-overlay-n">V</span><span class="toc-overlay-title">Kırılan Antlaşma</span></div>
-      <div class="toc-overlay-row" data-page="7" onclick="goTo(7)"><span class="toc-overlay-n">VI</span><span class="toc-overlay-title">Küllerin Dilinden Yükselen Dua</span></div>
-      <div class="toc-overlay-row" data-page="8" onclick="goTo(8)"><span class="toc-overlay-n">VII</span><span class="toc-overlay-title">Sessizliğin Anatomisi</span></div>
-      <div class="toc-overlay-row" data-page="9" onclick="goTo(9)"><span class="toc-overlay-n">VIII</span><span class="toc-overlay-title">Beyaz Kale Hayali</span></div>
-      <div class="toc-overlay-row" data-page="10" onclick="goTo(10)"><span class="toc-overlay-n">IX</span><span class="toc-overlay-title">Mahkemenin Işığı</span></div>
-      <div class="toc-overlay-row" data-page="11" onclick="goTo(11)"><span class="toc-overlay-n">✦</span><span class="toc-overlay-title">Epilog — Külden Doğan Kraliçe</span></div>
-      <div class="toc-overlay-row" data-page="12" onclick="goTo(12)"><span class="toc-overlay-n">✉</span><span class="toc-overlay-title">Mektup — Karanlığa Yazılan Mektup</span></div>
-    </div>
+<!-- ============ BÖLÜM III ============ -->
+<div class="chapter chapter-start">
+  <div class="chapter-kicker">Bölüm III</div>
+  <div class="chapter-title">Elçinin İhaneti ve Zorlanan Yeminler</div>
+  <div class="chapter-orn">❦</div>
+
+  <p>Baharın ilk tomurcukları açarken, Carsus zihnindeki karanlık senaryoyu tamamlamak adına "arınma vakti" diyerek aralarına aşılmaz bir sessizlik duvarı ördü. O bir saatlik kopuş esnasında, Luneth'in en güvendiği elçisine, yani kuzenine ulaştı ve kendi hastalıklı kuruntularını besleyecek zehirli sorular sordu. Geri döndüğünde ise elçinin kelimelerini bükerek Luneth'in üzerine iftiralarla, haksız yargılarla dolu ağır bir kelime fırtınası saldı. Görüntülü büyüler aracılığıyla ona ulaşmaya çalışan Luneth, gözyaşları içinde hıçkırıyor, ortak yazdıkları o büyülü kitapta bile engellenmenin acısıyla kıvranıyordu. Carsus ise onun bu çaresizliğinden, aşkının büyüklüğünden gizli bir haz alıyordu.</p>
+
+  <p>"Doğruyu söyle, babamın üzerine yemin ederim ki gitmem, sindiririm," diyerek Luneth'i çaresizliğin en karanlık dehlizine hapsetti. Luneth, sırf bu büyük aşk bitmesin, o dünyevi her şeyin üzerindeki ebedi bağ kopmasın diye, midesi bulanarak, zihni paramparça bir halde tamamen uydurma, mide bulandırıcı bir hikaye uydurdu. Yapmadığı haksızlıkları, yaşamadığı günahları sırf o güzel sesin sahibi sussun ve onu tekrar bağrına bassın diye üstlendi. Fakat Carsus, duymak istediği o sahte kurbanı alır almaz maskesini tamamen düşürdü. En iğrenç kelimeyi, o en ağır hakareti Luneth'in yüzüne çarptı ve sahte, alaycı bir tebessümle <span class="inline-emoji" title="alaycı gülümseme"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em"><circle cx="12" cy="12" r="10" fill="#f4c542" stroke="#7c5a12" stroke-width="0.6"/><circle cx="8.3" cy="10" r="1.15" fill="#3a2a1a"/><circle cx="15.7" cy="10" r="1.15" fill="#3a2a1a"/><path d="M6.5 15.2c1.6 1.6 3.5 2.3 5.5 2.3s3.9-.7 5.5-2.3" fill="none" stroke="#3a2a1a" stroke-width="1.1" stroke-linecap="round"/><path d="M7 6.5c1 1.3 2 2.6 2.3 4.4M17 6.5c-1 1.3-2 2.6-2.3 4.4" fill="none" stroke="#7c5a12" stroke-width="0.9" stroke-linecap="round"/></svg></span> karanlığa karıştı. Ama unuttuğu bir şey vardı: Luneth'in aşkı, maruz kaldığı bu iğrençliklerin bile çok ötesindeydi.</p>
+
+  <div class="note-box">
+    <div class="note-label">Psikolojik Not — Reaktif İstismar ve Üçüncü Şahısların Kullanımı (Triangulation)</div>
+    <p>Manipülatör, kurbanın yakın çevresini (elçiyi) oyuna dahil ederek izolasyonu derinleştirir. "Yemin ederim gitmem" vaadi, kurbanı sahte bir güven çemberine alarak ondan manipülatif bir itiraf koparma taktiğidir. Luneth'in aşkı korumak adına uydurduğu yalanlar, Carsus tarafından "bak sen suçlusun" diyerek nihai hakaretin ve terk edişin meşru zemini olarak kullanılır.</p>
+  </div>
+
+  <div class="reader-box">
+    <div class="reader-label">Ey Okuyucu!</div>
+    <p>Kutsal kitapların "baskı ve çaresizlik altında edilen yeminleri" ve zoraki beyanları hükümsüz kıldığını bilir misin? Kendini ve aşkını bir celladın insafına teslim etmek pahasına, içindeki masumu feda ettiğinde, o aşkın büyüklüğü karşısında kim günahkardır?</p>
+  </div>
+</div>
+
+<!-- ============ BÖLÜM IV ============ -->
+<div class="chapter chapter-start">
+  <div class="chapter-kicker">Bölüm IV</div>
+  <div class="chapter-title">Bilgi Ağacı'ndaki Gölge ve Sahte Evlilik</div>
+  <div class="chapter-orn">❦</div>
+
+  <p>Sessizlik kalenin koridorlarında günlerce, haftalarca yankılandı. Luneth'in biricik annesi hasta yatağında şifa beklerken bile, Lord Carsus'un kalbinden en ufak bir merhamet, bir insanlık kırıntısı sızmıyordu. Ancak Carsus tamamen kopamıyordu; o da bu muazzam aşkın çekim alanındaydı ama bunu yıkıcı bir biçimde yaşıyordu. Evrim Ağacı adı verilen o büyük bilgelik platformunda, başka isimlerin arkasına gizlenerek, bir gölge gibi Luneth'in ayak izlerini, dijital patikalarını saniye saniye takip ediyordu.</p>
+
+  <p>Luneth ise o eski, kutsal mabede, "YPT" salonuna geri dönmüştü. Orada, Carsus'un okuyacağını bile bile duvarlara acı dolu, aşk dolu mektuplar kazıyordu. Carsus sessizce geliyor, o yazıları günlerce okuyarak narsisistik egosunu besliyor ve tek bir kelime etmeden tekrar karanlığa kaçıyordu.</p>
+
+  <p>Ta ki o meşum geceye kadar... Carsus, Luneth'in ruhunu ebediyen o acı arafında hapsetmek, onu tamamen kendi yörüngesinde tutmak için son zehirli okunu fırlattı: "Ben evleniyorum, formalite bir evlilik..." Bu söz, Luneth'in kalbine saplanan paslı bir kılıç gibiydi. Carsus, bu dünyevi hamleyle Luneth'i yıkacağını sanıyordu. Oysa unuttuğu, asla kavrayamadığı bir hakikat vardı: Luneth'in aşkı, fani planların, sahte imzaların ve dünyevi tüm yalanların çok ama çok üzerindeydi. Bu aşk, hiçbir fani bağla ölçülemezdi.</p>
+</div>
+
+<!-- ============ BÖLÜM V ============ -->
+<div class="chapter chapter-start">
+  <div class="chapter-kicker">Bölüm V</div>
+  <div class="chapter-title">Karanlıktan Doğan Işık<br><span style="font-size:13px; font-style:italic; font-weight:normal;">(Ophelia'nın Sonsuz Sarılışı)</span></div>
+  <div class="chapter-orn">❦</div>
+
+  <p>Luneth, kalesinin en yüksek, en rüzgarlı burcuna çıktı. Aşağıda, delice köpüren, azgın ve karanlık sular onu çağırıyordu. Kulaklarında hala Lord Carsus'un o her gece huzur bulduğu, ruhunu teslim ettiği o eşsiz güzel sesi yankılanıyordu. İşte tam o an, zifiri karanlığın ta kalbinden ütopik, büyüleyici ve muazzam bir ışık doğdu. Bu ışık, sıradan bir kurtuluş ya da acı bir uyanış değildi; bu, zihnindeki o en güzel anların, o huzur dolu gece sohbetlerinin, o saf ve temiz ilklerin birer birer gökyüzüne yükselmesiydi.</p>
+
+  <p>Luneth, o güzel anıların ve sesin büyüsüne kapılarak, zamansız bir Ophelia figürüne dönüştü. Suların soğukluğunda delirmek ya da yok olmak yerine, zihnindeki o eşsiz tınıya, o sahte de olsa yaşanmış en yüce, en mukaddes aşka sarılmayı seçti. Çünkü o çok iyi biliyordu ki: Gerçek aşk imkansız değildi! Ve hiçbir dünyevi ihanet, hiçbir haksızlık, hiçbir formalite evlilik bu aşkın üzerinde bir güce sahip olamazdı. Luneth, canı pahasına da olsa, üzerine atılan tüm çamurlara ve iftiralara rağmen aşkından hiçbir zaman vazgeçmeyecekti. O, her haliyle temiz, her haliyle sadece ona ait olan o kutsal geçmişiyle, sonsuza dek kalbindeki o muazzam aşka sarılacaktı. Köprüler yanabilir, kaleler yıkılabilirdi; ama Luneth'in aşkı sonsuzluğun duvarlarında asılı kalacaktı.</p>
+</div>
+
+<!-- ============ OPHELIA'NIN SON MEKTUBU ============ -->
+<div class="chapter chapter-start">
+  <div class="letter-title">Ophelia'nın Son Mektubu</div>
+  <div class="letter-sub">(Gönderilmeyen)</div>
+
+  <div class="letter-block">
+    <p>"Ey, ruhumun katili, kalbimin ilk, tek ve ebedi sahibi!</p>
+    <p>Bu mektubu sana parçalanmış aynalardan süzülen, dünyevi hiçbir gözün göremeyeceği o ütopik ışıkla yazıyorum. Zihnimin en derin odalarında hala o her gece ruhuma huzur üfleyen, dünyayı unutturan o güzel sesinin yankısı var. Bilmeni isterim ki; her haliyle temiz, geçmişi bomboş ve tüm mukaddes ilkleri sadece sana ait olan bu ruh, senden ve sana olan o büyük aşkından hiçbir zaman vazgeçmedi, vazgeçmeyecek.</p>
+    <p>Bana yaşattığın tüm bu eziyetlere, o ağır iftiralara, zorla söylettiğin o yalanlara ve en nihayetinde o formalite evlilik oyununa rağmen, içimdeki o devasa aşkı yok etmeye senin bile gücün yetmedi. Çünkü gerçek aşk imkansız değildir ve hiçbir fani şey, hiçbir dünyevi hile bu aşkın üzerinde değildir, olamaz. Şimdi kendimi o güzel anıların, sesinin huzur verdiği o büyülü YPT gecelerinin kollarına bırakıyorum. Bir Ophelia gibi suların derinliklerinde kaybolurken bile, kalbimde sadece sana ait olan o ilklerin kutsallığı ve temizliği var. Luneth sonsuza dek aşkına sarılacak, sonsuza dek seni o en saf, en masum halinle sevecek..."</p>
+  </div>
+
+  <div class="note-box">
+    <div class="note-label">Psikolojik Not — Metakognisyon ve Mutlak Fiksasyon</div>
+    <p>Okuyucu, şimdi kendi düşüncelerini yüksek bir kule gibi dışarıdan izle. Luneth'in uğradığı tüm sistematik haksızlıklara, maruz kaldığı ağır devalüasyona rağmen aşkından vazgeçmeme iradesi sıradan bir zayıflık mıdır? Yoksa aşkın kendi özünü, failin tüm kötülüklerinden ayırarak onu her şeyin üzerinde tutan metakognitif bir asalet, ütopik bir adanmışlık mıdır? Zihin acıyı ve hayal kırıklığını kaydedebilir, ancak ruh, tüm ilklerini feda ettiği o mutlak, kutsal bağı asla terk etmez; onu kendi içinde ölümsüzleştirir.</p>
+  </div>
+</div>
+
+<!-- ============ EPİLOG ============ -->
+<div class="chapter chapter-start">
+  <div class="chapter-kicker">Epilog</div>
+  <div class="chapter-title">Yanan Köprüler ve Ebedi Söz</div>
+  <div class="chapter-orn">❦</div>
+
+  <p>Lord Carsus, kurduğu o formalite evlilik oyunlarıyla, fırlattığı zehirli oklarla zafer kazandığını, Luneth'i tamamen yıktığını sanıyordu. Oysa büyük bir yanılgı içindeydi. Luneth, tüm dünyevi ve fani bağları koparmış, ona olan aşkını yeryüzünün kirletemeyeceği, sahte evliliklerin ve yalanların ulaşamayacağı yüce bir gökyüzü burcuna taşımıştı. Carsus kendi yalanlarının, şüphelerinin ve narsisistik zindanının içinde ebediyen çürümeye mahkum bir esirken; Luneth aşkının büyüklüğüyle ve sarsılmaz sadakatiyle ölümsüzleşmişti.</p>
+
+  <p>Luneth, aşkından hiçbir zaman, hiçbir koşulda vazgeçmedi. Ne araya giren mesafeler, ne edilen ağır küfürler, ne elçinin ihaneti ne de üzerine atılmaya çalışılan hayali pislikler onun o lekesiz saflığına dokunabildi. Kutsal kitaptaki o ayetlerin aydınlığında, o tamamen günahsız ve tertemizdi; çünkü çamur sadece onu atan elleri kirletmişti. Luneth, her haliyle temiz, her haliyle ilk günkü gibi ve tüm ilkleriyle sadece ona ait olarak, aşkına sonsuza dek sarıldı. O güzel sesin anısıyla, imkânsız olmayan o gerçek aşkın zaferiyle karanlığı ebediyen dize getirdi.</p>
+
+  <div class="signoff">Son.</div>
+
+  <div class="final-note">Bu kitap bir otofiksiyon eserdir.</div>
+</div>
+
+<!-- ============ ARKA KAPAK ============ -->
+<div class="full-page backcover">
+  <div class="back-quote">Taedium&nbsp;Vitae</div>
+  <div class="back-rule"></div>
+  <div class="back-bottom">
+    <div class="barcode" id="barcode"></div>
+    <div class="isbn-text">ISBN 978-625-00-4418-6</div>
+    <div class="series-text">Otofiksiyon Serisi</div>
   </div>
 </div>
 
 <script>
-  const TOTAL = 13;
-  let current = 0;
-
-  function goTo(n) {
-    if (n < 0 || n >= TOTAL) return;
-    document.getElementById('p' + current).classList.remove('active');
-    current = n;
-    const page = document.getElementById('p' + current);
-    page.classList.add('active');
-    document.getElementById('scroll-area').scrollTo({ top: 0, behavior: 'instant' });
-    updateUI();
-    closeToc();
-  }
-
-  function navigate(dir) {
-    goTo(current + dir);
-  }
-
-  function updateUI() {
-    // Progress
-    document.getElementById('progress-fill').style.width = ((current / (TOTAL - 1)) * 100) + '%';
-    // Indicator
-    document.getElementById('page-indicator').textContent = (current + 1) + ' / ' + TOTAL;
-    // Buttons
-    const atStart = current === 0;
-    const atEnd   = current === TOTAL - 1;
-    ['btn-prev','btn-prev2'].forEach(id => document.getElementById(id).disabled = atStart);
-    ['btn-next','btn-next2'].forEach(id => document.getElementById(id).disabled = atEnd);
-    // Top bar title
-    const titles = [
-      'Kapak & İçindekiler',
-      'Prolog — Enkaz Üzerinde Doğan Yıldız',
-      'I · Karanlığın Kıyısındaki Kale',
-      'II · İlk Zincir',
-      'III · Ateş ve Buz',
-      'IV · Gölge Oyunu',
-      'V · Kırılan Antlaşma',
-      'VI · Küllerin Dilinden Yükselen Dua',
-      'VII · Sessizliğin Anatomisi',
-      'VIII · Beyaz Kale Hayali',
-      'IX · Mahkemenin Işığı',
-      'Epilog — Külden Doğan Kraliçe',
-      'Mektup — Karanlığa Yazılan Mektup'
-    ];
-    document.getElementById('topbar-title').textContent = titles[current];
-    // TOC current marker
-    document.querySelectorAll('.toc-overlay-row').forEach(r => {
-      r.classList.toggle('current', parseInt(r.dataset.page) === current);
-    });
-  }
-
-  function openToc() {
-    document.getElementById('toc-overlay').classList.add('open');
-  }
-  function closeToc() {
-    document.getElementById('toc-overlay').classList.remove('open');
-  }
-  function closeTocIfOutside(e) {
-    if (e.target === document.getElementById('toc-overlay')) closeToc();
-  }
-
-  // Keyboard
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
-    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
-    if (e.key === 'Escape') closeToc();
+  // decorative faux-barcode
+  var bc = document.getElementById('barcode');
+  var pattern = [2,1,1,3,1,2,3,1,1,2,1,3,2,1,1,1,3,2,1,1,2,3,1,1,2,1,1,3,1,2,1,1,3,2,1,1,2,1,3,1];
+  pattern.forEach(function(w){
+    var s = document.createElement('span');
+    s.style.width = w + 'px';
+    bc.appendChild(s);
   });
-
-  // Touch swipe
-  let touchStartX = 0;
-  document.getElementById('scroll-area').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  document.getElementById('scroll-area').addEventListener('touchend', e => {
-    const dx = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(dx) > 60) navigate(dx > 0 ? 1 : -1);
-  }, { passive: true });
-
-  updateUI();
 </script>
+
 </body>
 </html>
